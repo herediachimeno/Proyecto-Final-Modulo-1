@@ -1,4 +1,5 @@
 let docs = "";
+let respuestaApi = [];
 
 function getInfo() {
   let url =
@@ -6,10 +7,12 @@ function getInfo() {
     document.getElementById("buscador").value;
 
   let info = "";
+
   const myHeaders = new Headers();
 
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Authorization", "Bearer I6UmYPcLiqc-kJrk068m");
+  myHeaders.append("Access-Control-Allow-Origin", "*");
   fetch(url, {
     method: "GET",
     headers: myHeaders,
@@ -18,6 +21,7 @@ function getInfo() {
       return respuesta.json();
     })
     .then(function getInfo(datos) {
+      respuestaApi = datos;
       for (let i = 0; i < datos.docs.length; i++) {
         if (typeof datos.docs[i].name !== "undefined") {
           console.log(i);
@@ -55,18 +59,19 @@ function getInfo() {
 let favoritos = [];
 
 function guardarFavoritos(i) {
+  console.log(i);
   if (localStorage.getItem("favoritos") !== null) {
     favoritos = JSON.parse(localStorage.getItem("favoritos"));
   }
   window.alert("Guardado en Favoritos");
-  favoritos.push(docs[i]);
+  console.log(respuestaApi.docs[i]);
+  favoritos.push(respuestaApi.docs[i]);
   let favoritosJSON = JSON.stringify(favoritos);
   localStorage.setItem("favoritos", favoritosJSON);
 }
 
 function leerFavoritos() {
-  let misFavoritos = localStorage.getItem("favoritos");
-  misFavoritos = JSON.parse(misFavoritos);
+  let misFavoritos = JSON.parse(localStorage.getItem("favoritos"));
   console.log(misFavoritos);
   info = "";
   for (let i = 0; i < misFavoritos.length; i++) {
